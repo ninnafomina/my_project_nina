@@ -42,4 +42,5 @@ $form.addEventListener('submit', (event) => {
         // иначе, оповещаем об ошибке
         alert('Error');
     }
+    console.log
 });

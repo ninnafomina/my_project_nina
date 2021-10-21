@@ -1,46 +1,24 @@
-// создаем переменную с ссылкой на форму, так как мы будем работать с ней в этом коде не раз
-const $form = document.querySelector('#my_form');
+const API = 'https://swapi.dev/api/';
+ const APIPeople = 'https://swapi.dev/api/people/';
 
-// вешаем прослушку (обработчик событий) на SUBMIT
-$form.addEventListener('submit', (event) => {
-    // убираем возможность отправлять форму браузером по умолчанию
-    event.preventDefault();
+ const renderList = (list) => {
+     const $listWrapper = document.querySelector('#people_list');
+     $listWrapper.innerHTML = '';
 
-    // создаем объект формы, чтобы работать с данными
-    const formData = new FormData($form);
-    
-    // проверяем наличии `first_name` в объекте формы
-    const isValidateFirstName = formData.get('first_name');
+     list.forEach(item => {
+         const $a = document.createElement('a');
+         $a.href='#';
+         $a.className = 'list-group-item list-group-item-action';
+         $a.innerText = item.name;
 
-    const secondName = formData.get('second_name');
-    // проверяем наличии `second_name` в объекте формы и его длина должна быть более 2 символов
-    const isValidateSecondName = secondName && secondName.length >= 2;
+         $listWrapper.appendChild($a);
+     });
+ };
 
-    const age = formData.get('age');
-    // проверяем наличии `age` в объекте формы и его значение должно быть более 18
-    const isValidateAge = age && +age >= 18;
-
-    const gender = formData.get('gender');
-    // проверяем наличии `gender` и это должен быть male ИЛИ female
-    const isValidateGender = gender && (gender === 'male' || gender === 'female');
-
-    // formIsValidate будет true, если все элементы будут true
-    const formIsValidate = (
-        isValidateFirstName &&
-        isValidateSecondName &&
-        isValidateAge &&
-        isValidateGender
-    );
-
-    // если валидно...
-    if (formIsValidate) {
-        // оповещаем, что всё ок и...
-        alert('Is correct');
-        // ...и чистим форму (рефреш)
-        $form.reset();
-    } else {
-        // иначе, оповещаем об ошибке
-        alert('Error');
-    }
-    console.log
-});
+ fetch(APIPeople)
+     .then((response) => {
+         return response.json();
+     })
+     .then((data) => {
+         renderList(data.results);
+     });
